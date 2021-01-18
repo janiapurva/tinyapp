@@ -4,6 +4,11 @@ const app = express();
 
 const PORT = 8080;
 
+// adding body parser for post request
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
+
 //setting Ejs engine look up
 app.set('view engine','ejs');
 
