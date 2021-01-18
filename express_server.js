@@ -14,6 +14,11 @@ app.get('/', (req,res) => {
   res.send('Hello!');
 });
 
+// adding routes
+app.get('/urls.json', (req,res) => {
+  res.json(urlDatabase);
+});
+
 //listening port 
 app.listen(PORT, () => {
   console.log(`Example app lsitening on port ${PORT}!`);
