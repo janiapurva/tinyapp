@@ -49,9 +49,28 @@ app.get('/urls/:shortURL' ,(req,res) => {
   res.render('urls_show',templateVars);
 });
 
+//adding route to match for post request
+app.post('/urls',(req,res) => {
+  console.log(req.body);
+  res.send('ok');
+});
+
+//Generating a Rnadom  short URL
+// eslint-disable-next-line func-style
+function generateRandomString() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i <= 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+
+}
 
 //listening port
 app.listen(PORT, () => {
-  console.log(`Example app lsitening on port ${PORT}!`);
+  console.log(`Example app listening on port ${PORT}!`);
 });
 
