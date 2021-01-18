@@ -27,6 +27,13 @@ app.get('/hello', (req,res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');
 });
 
+// sending data to URL.ejs
+app.get('/urls' , (req,res) => {
+  const templateVars = {urls: urlDatabase};
+  res.render('urls_index',templateVars);
+});
+
+
 //listening port
 app.listen(PORT, () => {
   console.log(`Example app lsitening on port ${PORT}!`);
