@@ -61,7 +61,7 @@ app.post('/urls',(req,res) => {
 //Generating a Rnadom  short URL
 // eslint-disable-next-line func-style
 function generateRandomString() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+  const characters = 'ABCDEFGHIJKLMNOP1234567890QRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   let result = '';
   const charactersLength = characters.length;
   for (let i = 1; i <= 6; i++) {
@@ -85,13 +85,7 @@ app.get("/u/:shortURL", (req, res) => {
   } else {
     res.send("No existing short URL in database...");
   }
-  // if (urlDatabase[req.params.shortURL] === undefined) {
-    
-  //   res.send("No existing short URL in database...");
-  // } else {
-  //   const longURL = urlDatabase[req.params.shortURL].longURL;
-  //   res.redirect(longURL);
-  // }
+
 });
 
 //listening port
