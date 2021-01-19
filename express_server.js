@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+const morgan = require('morgan');
+
 const PORT = 8080;
 
 // adding body parser for post request
@@ -11,6 +13,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //setting Ejs engine look up
 app.set('view engine','ejs');
+
+//morgan set up
+app.use(morgan('dev'));
 
 const urlDatabase = {
   "b2xVn2" : "http://www.lighthouselabs.ca",
@@ -86,6 +91,17 @@ app.get("/u/:shortURL", (req, res) => {
     res.send("No existing short URL in database...");
   }
 
+});
+
+//// Day 2
+////adding post request routing
+
+app.post('/urls/:shortURL/delete',(req,res)=> {
+  const urlDelete = req.params.shortURL;
+  
+  delete urlDatabase[urlDelete];
+  
+  res.redirect("/urls");
 });
 
 //listening port
