@@ -55,8 +55,7 @@ app.post('/urls',(req,res) => {
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
-  console.log(`${res.statusCode} ok `);
-  res.send('ok');
+  res.redirect(`/urls/${shortURL}`);
 });
 
 //Generating a Rnadom  short URL
@@ -72,6 +71,28 @@ function generateRandomString() {
   return result;
 
 }
+
+/// redirecting with short url
+
+// Redirect user to long URL(actual website)
+// if URL exists in database
+
+
+app.get("/u/:shortURL", (req, res) => {
+  let longURL = urlDatabase[req.params.shortURL];
+  if (longURL) {
+    res.redirect(longURL);
+  } else {
+    res.send("No existing short URL in database...");
+  }
+  // if (urlDatabase[req.params.shortURL] === undefined) {
+    
+  //   res.send("No existing short URL in database...");
+  // } else {
+  //   const longURL = urlDatabase[req.params.shortURL].longURL;
+  //   res.redirect(longURL);
+  // }
+});
 
 //listening port
 app.listen(PORT, () => {
