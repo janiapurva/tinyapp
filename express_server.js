@@ -49,9 +49,13 @@ app.get('/urls/:shortURL' ,(req,res) => {
   res.render('urls_show',templateVars);
 });
 
-//adding route to match for post request
+//adding route to match for post request and generating random string
 app.post('/urls',(req,res) => {
   console.log(req.body);
+  const shortURL = generateRandomString();
+  const longURL = req.body.longURL;
+  urlDatabase[shortURL] = longURL;
+  console.log(`${res.statusCode} ok `);
   res.send('ok');
 });
 
@@ -61,7 +65,7 @@ function generateRandomString() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
   let result = '';
   const charactersLength = characters.length;
-  for (let i = 0; i <= 6; i++) {
+  for (let i = 1; i <= 6; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
 
