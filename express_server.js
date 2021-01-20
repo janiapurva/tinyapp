@@ -10,6 +10,9 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+/// cockie parser
+const cookieParser = require('cookie-parser');
+
 
 //setting Ejs engine look up
 app.set('view engine','ejs');
@@ -118,7 +121,17 @@ app.post('/urls/:shortURL/edit', (req,res)=> {
 app.post("/urls/:shortURL", (req,res) => {
   let shorturl = req.params.shortURL;
   urlDatabase[shorturl] = req.body.editedURL;
-  res.redirect("/urls")
+  res.redirect("/urls");
+});
+
+// ading login route
+app.post('/login',(req,res) => {
+  console.log(req.body);
+  res.cookie('username',req.body.username);
+  
+
+
+  res.redirect('/urls');
 });
 
 //listening port
