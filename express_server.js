@@ -52,7 +52,9 @@ app.get('/urls' , (req,res) => {
 
 // adding  Get route to Show the Form
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const username = req.cookies["username"];
+  const templateVars = {urls: urlDatabase,username};
+  res.render("urls_new",templateVars);
 });
 
 //adding second route and templete
@@ -130,6 +132,7 @@ app.post("/urls/:shortURL", (req,res) => {
 
 // ading login route
 app.post('/login',(req,res) => {
+  
   res.cookie("username",req.body.username);
   res.redirect('/urls');
 });
@@ -147,6 +150,41 @@ app.post('/logout',(req,res) => {
   res.redirect('/urls');
 
 });
+
+
+
+
+/// creating userdata to store
+const user = {
+  
+};
+
+///// Week 3 creating Registration display templete
+app.get('/register', (req,res) => {
+  const username = req.cookies["username"];
+  const templateVars = {urls: urlDatabase,username};
+  res.render('url _registration',templateVars);
+});
+
+///// creatung register object
+app.post('/register', (req,res) => {
+  const newUserId = generateRandomString();
+  /// creating new Object
+  const newUser = {
+    id: newUserId,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  // assiging nrew object
+  user[newUserId] = newUser;
+  res.cookie("newUserId",newUserId);
+  console.log(user);
+  res.redirect('/urls');
+
+});
+
+
+
 
 
 //listening port
