@@ -190,8 +190,23 @@ app.get('/register', (req,res) => {
   res.render('url _registration',templateVars);
 });
 
+
+/// email helper function
+// eslint-disable-next-line func-style
+function emailChecker(emailInput) {
+  for (let person in users) {
+    if (users[person]['email'] === emailInput) {
+      return users[person];
+    }
+  }
+}
+
 ///// creatung register object
 app.post('/register', (req,res) => {
+  // checking errors with empaty string
+  if (req.body.email === '' || req.body.password === '' || emailChecker(req.body.email)) {
+    res.status(400).send('Error');
+  }
 
   const newUserId = generateRandomString();
   /// creating new Object
