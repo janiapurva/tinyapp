@@ -166,19 +166,20 @@ function emailChecker(emailInput) {
 
 // ading login route
 app.post('/login',(req,res) => {
-  let id = "";
   const inputPassword = req.body.password;
   const inputemail = req.body.email;
   const resultUser = emailChecker(inputemail);
-  if (resultUser === undefined || inputPassword !== resultUser.password) {
-    return res.send(`error 403`);
+  if (resultUser === undefined || inputPassword !== resultUser.password || req.cookie.id !== resultUser.id) {
+    res.redirect('/register');
   }
+  let id = "";
   for (let key in users) {
     if (users[key].email === inputemail) {
       id = key;
     }
   }
   res.cookie("newUserId",id);
+
   res.redirect('/urls');
 });
 
