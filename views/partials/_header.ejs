@@ -9,10 +9,21 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div> 
-           
+      </div>
+      <div>
+        <% if(!username) {%>
           <form method="POST" action="/login">   
-            <input type="text" class="form-control" id="username" placeholder="Usename" name = "username">       
+            <input type="text" class="form-control" id="username" placeholder="Username" name = "username">       
             <button type="Submit" class="btn btn-primary" > login </button>       
-          </form>     
-         </nav>
-       </header>
+          </form> 
+          <% } else {%>
+          <form method="POST" action="/logout"> 
+            <label>
+              loged in as <%= username %>
+            </label>  
+            <button type="Submit" class="btn btn-primary" >logout</button>       
+          </form>
+          <% }%>
+        </div>    
+        </nav>
+      </header>
