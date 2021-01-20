@@ -12,10 +12,9 @@
       </div>
       <div>
         <% if(!user) {%>
-          <form method="POST" action="/login" class = "d-flex">   
-            <input type="text" class="form-control" id="username" placeholder="Username" name = "email">       
-            <button type="Submit" class="btn btn-primary ml-2"  > login </button>       
-          </form> 
+          
+            <a href="/login" >Login</a><t>|</t><a href="/register" >Register</a>
+       
           <% } else {%>
           <form method="POST" action="/logout"> 
             <label>

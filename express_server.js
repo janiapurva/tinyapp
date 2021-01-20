@@ -63,7 +63,8 @@ app.get('/hello', (req,res) => {
 app.get('/urls' , (req,res) => {
   const id = req.cookies.newUserId;
   const user = users[id];
-  const templateVars = {urls: urlDatabase,user};
+  console.log(`this is user`, user)
+  const templateVars = {urls: urlDatabase, user};
   res.render('urls_index',templateVars);
 });
 
@@ -220,6 +221,14 @@ app.post('/register', (req,res) => {
   res.cookie("newUserId",newUserId);
   res.redirect('/urls');
 
+});
+
+/// creating a log  page
+app.get('/login',(req,res) => {
+  const id = req.cookies.newUserId;
+  const user = users[id];
+  const templateVars = {urls: urlDatabase,user};
+  res.render('user_login',templateVars);
 });
 
 
