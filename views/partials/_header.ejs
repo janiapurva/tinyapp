@@ -11,15 +11,15 @@
       </div> 
       </div>
       <div>
-        <% if(!username) {%>
+        <% if(!user) {%>
           <form method="POST" action="/login" class = "d-flex">   
-            <input type="text" class="form-control" id="username" placeholder="Username" name = "username">       
+            <input type="text" class="form-control" id="username" placeholder="Username" name = "email">       
             <button type="Submit" class="btn btn-primary ml-2"  > login </button>       
           </form> 
           <% } else {%>
           <form method="POST" action="/logout"> 
             <label>
-              loged in as <%= username %>
+              loged in as <%= user.email %>
             </label>  
             <button type="Submit" class="btn btn-primary" >logout</button>       
           </form>

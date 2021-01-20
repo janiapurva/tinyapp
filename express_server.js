@@ -28,6 +28,22 @@ const urlDatabase = {
   "9sm5xk" :  "http://www.google.com"
 };
 
+
+
+/// creating userdata to store
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+  
+};
 // creating homePage request
 app.get('/', (req,res) => {
   res.send('Hello!');
@@ -45,21 +61,25 @@ app.get('/hello', (req,res) => {
 
 // sending data to URL.ejs
 app.get('/urls' , (req,res) => {
-
-  const templateVars = {urls: urlDatabase,username: req.cookies["username"]};
+  const id = req.cookies.newUserId;
+  const user = users[id];
+  const templateVars = {urls: urlDatabase,user};
   res.render('urls_index',templateVars);
 });
 
 // adding  Get route to Show the Form
 app.get("/urls/new", (req, res) => {
-  const username = req.cookies["username"];
-  const templateVars = {urls: urlDatabase,username};
+  const id = req.cookies.newUserId;
+  const user = users[id];
+  const templateVars = {urls: urlDatabase,user};
   res.render("urls_new",templateVars);
 });
 
 //adding second route and templete
 app.get('/urls/:shortURL' ,(req,res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL],username: req.cookies["username"]};
+  const id = req.cookies.newUserId;
+  const user = users[id];
+  const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL],user};
   res.render('urls_show',templateVars);
 });
 
@@ -132,8 +152,14 @@ app.post("/urls/:shortURL", (req,res) => {
 
 // ading login route
 app.post('/login',(req,res) => {
-  
-  res.cookie("username",req.body.username);
+  let id = "";
+  const email = req.body.email;
+  for (let key in users) {
+    if (users[key].email === email) {
+      id = key;
+    }
+  }
+  res.cookie("newUserId",id);
   res.redirect('/urls');
 });
 
@@ -145,7 +171,7 @@ app.post('/login',(req,res) => {
 
 //// implementing log out function
 app.post('/logout',(req,res) => {
-  res.clearCookie("username");
+  res.clearCookie("newUserId");
   
   res.redirect('/urls');
 
@@ -154,20 +180,19 @@ app.post('/logout',(req,res) => {
 
 
 
-/// creating userdata to store
-const user = {
-  
-};
+
 
 ///// Week 3 creating Registration display templete
 app.get('/register', (req,res) => {
-  const username = req.cookies["username"];
-  const templateVars = {urls: urlDatabase,username};
+  const id = req.cookies.newUserId;
+  const user = users[id];
+  const templateVars = {urls: urlDatabase,user};
   res.render('url _registration',templateVars);
 });
 
 ///// creatung register object
 app.post('/register', (req,res) => {
+
   const newUserId = generateRandomString();
   /// creating new Object
   const newUser = {
@@ -176,9 +201,8 @@ app.post('/register', (req,res) => {
     password: req.body.password,
   };
   // assiging nrew object
-  user[newUserId] = newUser;
+  users[newUserId] = newUser;
   res.cookie("newUserId",newUserId);
-  console.log(user);
   res.redirect('/urls');
 
 });
