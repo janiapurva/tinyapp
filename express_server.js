@@ -63,7 +63,6 @@ app.get('/hello', (req,res) => {
 app.get('/urls' , (req,res) => {
   const id = req.cookies.newUserId;
   const user = users[id];
-  console.log(`this is user`, user)
   const templateVars = {urls: urlDatabase, user};
   res.render('urls_index',templateVars);
 });
@@ -151,12 +150,31 @@ app.post("/urls/:shortURL", (req,res) => {
   res.redirect("/urls");
 });
 
+
+
+/// email helper function
+// eslint-disable-next-line func-style
+function emailChecker(emailInput) {
+  for (let person in users) {
+    if (users[person]['email'] === emailInput) {
+      return users[person];
+    }
+  }
+}
+
+
+
 // ading login route
 app.post('/login',(req,res) => {
   let id = "";
-  const email = req.body.email;
+  const inputPassword = req.body.password;
+  const inputemail = req.body.email;
+  const resultUser = emailChecker(inputemail);
+  if (resultUser === undefined || inputPassword !== resultUser.password) {
+    return res.send(`error 403`);
+  }
   for (let key in users) {
-    if (users[key].email === email) {
+    if (users[key].email === inputemail) {
       id = key;
     }
   }
@@ -192,15 +210,7 @@ app.get('/register', (req,res) => {
 });
 
 
-/// email helper function
-// eslint-disable-next-line func-style
-function emailChecker(emailInput) {
-  for (let person in users) {
-    if (users[person]['email'] === emailInput) {
-      return users[person];
-    }
-  }
-}
+
 
 ///// creatung register object
 app.post('/register', (req,res) => {
