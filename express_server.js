@@ -24,8 +24,8 @@ app.set('view engine','ejs');
 app.use(morgan('dev'));
 
 const urlDatabase = {
-  "b2xVn2" : "http://www.lighthouselabs.ca",
-  "9sm5xk" :  "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 
@@ -59,6 +59,19 @@ app.get('/hello', (req,res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');
 });
 
+// filtering use and url
+// eslint-disable-next-line func-style
+function filterUrlsUser(userId,urlDatabase) {
+  let userUrl = {};
+  for (let shortU in urlDatabase) {
+    if (urlDatabase[shortU].userID === userId) {
+      userUrl[shortU] = urlDatabase[shortU];
+    }
+  }
+  return userUrl;
+}
+
+
 // sending data to URL.ejs
 app.get('/urls' , (req,res) => {
   const id = req.cookies.newUserId;
@@ -83,16 +96,18 @@ app.get("/urls/new", (req, res) => {
 app.get('/urls/:shortURL' ,(req,res) => {
   const id = req.cookies.newUserId;
   const user = users[id];
-  const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL],user};
+  const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL].longURL, user};
   res.render('urls_show',templateVars);
 });
 
 //adding route to match for post request and generating random string
 app.post('/urls',(req,res) => {
   console.log(req.body);
+  const id = req.cookies.newUserId;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  const newId = {longURL :longURL,userID:id};
+  urlDatabase[shortURL] = newId;
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -117,7 +132,7 @@ function generateRandomString() {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL].longURL;
   if (longURL) {
     res.redirect(longURL);
   } else {
