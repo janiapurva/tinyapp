@@ -4,7 +4,9 @@ const app = express();
 
 const morgan = require('morgan');
 
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 const PORT = 8080;
 
@@ -37,12 +39,12 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password:bcrypt.hashSync("purple-monkey-dinosaur", saltRounds),
   },
   "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", saltRounds)
   }
   
 };
@@ -223,7 +225,7 @@ app.post('/login',(req,res) => {
   const inputPassword = req.body.password;
   const inputemail = req.body.email;
   const resultUser = emailChecker(inputemail);
-  if (resultUser === undefined || inputPassword !== resultUser.password) {
+  if (resultUser === undefined || !bcrypt.compareSync(inputPassword, resultUser.password)) {
     res.redirect('/register');
   }
   let id = "";
@@ -246,7 +248,6 @@ app.post('/login',(req,res) => {
 //// implementing log out function
 app.post('/logout',(req,res) => {
   res.clearCookie("newUserId");
-  
   res.redirect('/urls');
 
 });
@@ -276,10 +277,11 @@ app.post('/register', (req,res) => {
 
   const newUserId = generateRandomString();
   /// creating new Object
+  const hashedPassword = bcrypt.hashSync(req.body.password,saltRounds);
   const newUser = {
     id: newUserId,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword,
   };
   // assiging nrew object
   users[newUserId] = newUser;
