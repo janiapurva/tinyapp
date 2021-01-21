@@ -70,9 +70,13 @@ app.get('/urls' , (req,res) => {
 // adding  Get route to Show the Form
 app.get("/urls/new", (req, res) => {
   const id = req.cookies.newUserId;
-  const user = users[id];
-  const templateVars = {urls: urlDatabase,user};
-  res.render("urls_new",templateVars);
+  if (!id) {
+    res.redirect('/login');
+  } else {
+    const user = users[id];
+    const templateVars = {urls: urlDatabase,user};
+    res.render("urls_new",templateVars);
+  }
 });
 
 //adding second route and templete
