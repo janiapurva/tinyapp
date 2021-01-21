@@ -4,6 +4,8 @@ const app = express();
 
 const morgan = require('morgan');
 
+// const bcrypt = require('bcrypt');
+
 const PORT = 8080;
 
 
@@ -86,8 +88,8 @@ app.get('/urls' , (req,res) => {
     const templateVars = {urls: urlDatabase, id,user};
     res.render('urls_index',templateVars);
   } else {
-    res.send(`You have to log in or Register first`);
-    res.redirect('/login');
+    
+    res.send(`log in or register first`);
   }
 });
 
@@ -106,9 +108,14 @@ app.get("/urls/new", (req, res) => {
 //adding second route and templete
 app.get('/urls/:shortURL' ,(req,res) => {
   const id = req.cookies.newUserId;
-  const user = users[id];
-  const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL].longURL, user};
-  res.render('urls_show',templateVars);
+  if (id) {
+    const user = users[id];
+    const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL].longURL, user};
+    res.render('urls_show',templateVars);
+  } else {
+    
+    res.send(`log in or register first`);
+  }
 });
 
 //adding route to match for post request and generating random string
@@ -156,20 +163,37 @@ app.get("/u/:shortURL", (req, res) => {
 ////adding post request routing
 
 app.post('/urls/:shortURL/delete',(req,res)=> {
-  const urlDelete = req.params.shortURL;
+  const id = req.cookies.newUserId;
+  if (id) {
+    const urlDelete = req.params.shortURL;
+    if (id === urlDatabase[urlDelete].userID) {
+      delete urlDatabase[urlDelete];
   
-  delete urlDatabase[urlDelete];
-  
-  res.redirect("/urls");
+      res.redirect("/urls");
+    } else {
+      res.send(`you can not delete url not belogs to You`);
+    }
+  } else {
+    res.send('please First login or refgister');
+  }
 });
 
 
 /// adding edit button
 app.post('/urls/:shortURL/edit', (req,res)=> {
-  // console.log(`this is `, req.params.shortURL);
-  const moveUrl = req.params.shortURL;
-  res.redirect(`/urls/${moveUrl}`);
+  const id = req.cookies.newUserId;
+  if (id) {
+    const moveUrl = req.params.shortURL;
+    if (id === urlDatabase[moveUrl].userID) {
+      res.redirect(`/urls/${moveUrl}`);
 
+    } else {
+      res.send(`you can not delete url not belogs to You`);
+    }
+  } else {
+    res.send('please First login or register');
+  }
+  
 });
 
 
