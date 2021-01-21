@@ -8,6 +8,14 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
+const cookieSession = require('cookie-session');
+
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+}));
+
 const PORT = 8080;
 
 
@@ -36,16 +44,7 @@ const urlDatabase = {
 
 /// creating userdata to store
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password:bcrypt.hashSync("purple-monkey-dinosaur", saltRounds),
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: bcrypt.hashSync("dishwasher-funk", saltRounds)
-  }
+  
   
 };
 // creating homePage request
@@ -80,7 +79,7 @@ function filterUrlsUser(userId) {
 
 // sending data to URL.ejs
 app.get('/urls' , (req,res) => {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   console.log(id);
 
   // return userUrlDatabase
@@ -97,7 +96,7 @@ app.get('/urls' , (req,res) => {
 
 // adding  Get route to Show the Form
 app.get("/urls/new", (req, res) => {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   if (!id) {
     res.redirect('/login');
   } else {
@@ -109,7 +108,7 @@ app.get("/urls/new", (req, res) => {
 
 //adding second route and templete
 app.get('/urls/:shortURL' ,(req,res) => {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   if (id) {
     const user = users[id];
     const templateVars = {shortURL: req.params.shortURL, longURL:urlDatabase[req.params.shortURL].longURL, user};
@@ -123,7 +122,7 @@ app.get('/urls/:shortURL' ,(req,res) => {
 //adding route to match for post request and generating random string
 app.post('/urls',(req,res) => {
   console.log(req.body);
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   const newId = {longURL :longURL,userID:id};
@@ -165,7 +164,7 @@ app.get("/u/:shortURL", (req, res) => {
 ////adding post request routing
 
 app.post('/urls/:shortURL/delete',(req,res)=> {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   if (id) {
     const urlDelete = req.params.shortURL;
     if (id === urlDatabase[urlDelete].userID) {
@@ -183,7 +182,7 @@ app.post('/urls/:shortURL/delete',(req,res)=> {
 
 /// adding edit button
 app.post('/urls/:shortURL/edit', (req,res)=> {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   if (id) {
     const moveUrl = req.params.shortURL;
     if (id === urlDatabase[moveUrl].userID) {
@@ -234,7 +233,7 @@ app.post('/login',(req,res) => {
       id = key;
     }
   }
-  res.cookie("newUserId",id);
+  req.session.newUserId = id;
 
   res.redirect('/urls');
 });
@@ -247,7 +246,7 @@ app.post('/login',(req,res) => {
 
 //// implementing log out function
 app.post('/logout',(req,res) => {
-  res.clearCookie("newUserId");
+  req.session = null;
   res.redirect('/urls');
 
 });
@@ -259,7 +258,7 @@ app.post('/logout',(req,res) => {
 
 ///// Week 3 creating Registration display templete
 app.get('/register', (req,res) => {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   const user = users[id];
   const templateVars = {urls: urlDatabase,user};
   res.render('url _registration',templateVars);
@@ -272,7 +271,7 @@ app.get('/register', (req,res) => {
 app.post('/register', (req,res) => {
   // checking errors with empaty string
   if (req.body.email === '' || req.body.password === '' || emailChecker(req.body.email)) {
-    res.status(400).send('Error');
+    res.send('Error');
   }
 
   const newUserId = generateRandomString();
@@ -285,14 +284,14 @@ app.post('/register', (req,res) => {
   };
   // assiging nrew object
   users[newUserId] = newUser;
-  res.cookie("newUserId",newUserId);
+  req.session.newUserId = newUserId;
   res.redirect('/urls');
 
 });
 
 /// creating a log  page
 app.get('/login',(req,res) => {
-  const id = req.cookies.newUserId;
+  const id = req.session.newUserId;
   const user = users[id];
   const templateVars = {urls: urlDatabase,user};
   res.render('user_login',templateVars);
