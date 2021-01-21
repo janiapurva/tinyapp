@@ -61,7 +61,7 @@ app.get('/hello', (req,res) => {
 
 // filtering use and url
 // eslint-disable-next-line func-style
-function filterUrlsUser(userId,urlDatabase) {
+function filterUrlsUser(userId) {
   let userUrl = {};
   for (let shortU in urlDatabase) {
     if (urlDatabase[shortU].userID === userId) {
@@ -72,12 +72,23 @@ function filterUrlsUser(userId,urlDatabase) {
 }
 
 
+
+
 // sending data to URL.ejs
 app.get('/urls' , (req,res) => {
   const id = req.cookies.newUserId;
-  const user = users[id];
-  const templateVars = {urls: urlDatabase, user};
-  res.render('urls_index',templateVars);
+  console.log(id);
+
+  // return userUrlDatabase
+  if (id) {
+    const urlDatabase = filterUrlsUser(id);
+    const user = users[id];
+    const templateVars = {urls: urlDatabase, id,user};
+    res.render('urls_index',templateVars);
+  } else {
+    res.send(`You have to log in or Register first`);
+    res.redirect('/login');
+  }
 });
 
 // adding  Get route to Show the Form
@@ -188,7 +199,7 @@ app.post('/login',(req,res) => {
   const inputPassword = req.body.password;
   const inputemail = req.body.email;
   const resultUser = emailChecker(inputemail);
-  if (resultUser === undefined || inputPassword !== resultUser.password || req.cookie.id !== resultUser.id) {
+  if (resultUser === undefined || inputPassword !== resultUser.password) {
     res.redirect('/register');
   }
   let id = "";
