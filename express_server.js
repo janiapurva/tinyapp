@@ -209,7 +209,7 @@ app.post("/urls/:shortURL", (req,res) => {
 
 /// email helper function
 // eslint-disable-next-line func-style
-function emailChecker(emailInput) {
+function emailChecker(emailInput,users) {
   for (let person in users) {
     if (users[person]['email'] === emailInput) {
       return users[person];
@@ -223,7 +223,7 @@ function emailChecker(emailInput) {
 app.post('/login',(req,res) => {
   const inputPassword = req.body.password;
   const inputemail = req.body.email;
-  const resultUser = emailChecker(inputemail);
+  const resultUser = emailChecker(inputemail,users);
   if (resultUser === undefined || !bcrypt.compareSync(inputPassword, resultUser.password)) {
     res.redirect('/register');
   }
@@ -270,7 +270,7 @@ app.get('/register', (req,res) => {
 ///// creatung register object
 app.post('/register', (req,res) => {
   // checking errors with empaty string
-  if (req.body.email === '' || req.body.password === '' || emailChecker(req.body.email)) {
+  if (req.body.email === '' || req.body.password === '' || emailChecker(req.body.email,users)) {
     res.send('Error');
   }
 
