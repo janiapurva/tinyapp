@@ -6,19 +6,19 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 
 ### Login Page
-!["Login Page"](https://github.com/janiapurva/tinyapp/raw/master/images/login.jpg)
+!["Login Page"](./doc/login.jpg)
 
 ### Register Page
-!["Register"](https://github.com/janiapurva/tinyapp/raw/master/images/register.jpg)
+!["Register"](./doc/register.jpg)
 
 ### Login Home
-!["Login Home"](https://github.com/janiapurva/tinyapp/raw/master/images/loginHome.jpg)
+!["Login Home"](./doc/loginHome.jpg)
 
 ### Edit URL Page
-!["Edit URL page"](https://github.com/janiapurva/tinyapp/raw/master/images/editPage.jpg)
+!["Edit URL page"](./doc/editPage.jpg)
 
 ### My URL
-!["My URL"](https://github.com/janiapurva/tinyapp/raw/master/images/stored.jpg)
+!["My URL"](./doc/stored.jpg)
 
 
 
