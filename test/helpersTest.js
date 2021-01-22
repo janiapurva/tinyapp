@@ -20,21 +20,16 @@ const testUsers = {
 
 
 /*Note: I have implemnted email checker function which returns full object the reason for that I have used this function to access various data like email, password and userId and it has all dependency of my project
-In order to pass this test I am making another function which will out put email only from emailChecker fucntion whcih I have used.
+In order to pass this test I have just added id only to access object.*/
 
-*/
-// eslint-disable-next-line func-style
-function emailAbstructor(callback,listOfobject) {
-  let result = callback(listOfobject);
-  return result;
-}
+
 
 
 
 
 describe('emailChecker', function() {
   it('should return a user with valid email', function() {
-    const user = emailAbstructor(emailChecker,testUsers);
+    const user = emailChecker("user@example.com",testUsers).id;
     const expectedOutput = "userRandomID";
     // Write your assert statement here
     assert.equal(expectedOutput,user);
@@ -47,5 +42,5 @@ describe('emailChecker', function() {
   });
 });
 
-console.log(emailChecker("user@example.com",testUsers));
+
 
